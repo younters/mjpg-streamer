@@ -11,7 +11,14 @@ if (PLUGIN_INPUT_OPENCV)
 
     MJPG_STREAMER_PLUGIN_COMPILE(input_opencv input_opencv.cpp)
     
-    target_link_libraries(input_opencv ${OpenCV_LIBS})
+    find_package(libfreenect REQUIRED)
+
+    include_directories("/usr/include/libusb-1.0/")
+
+
+    target_link_libraries(input_opencv ${OpenCV_LIBS}
+    									 ${FREENECT_LIBRARIES})
+
     
     add_subdirectory(filters/cvfilter_cpp)
     add_subdirectory(filters/cvfilter_py)
