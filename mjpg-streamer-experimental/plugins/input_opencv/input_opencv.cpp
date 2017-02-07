@@ -57,18 +57,22 @@ typedef void (*filter_process_fn)(void* filter_ctx, Mat &src, Mat &dst);
 typedef void (*filter_free_fn)(void* filter_ctx);
 
 
+
 typedef struct {
     pthread_t   worker;
     VideoCapture capture;
-
-
+    
+    context_settings *init_settings;
+    
+    void* filter_handle;
+    void* filter_ctx;
+    
     filter_init_fn filter_init;
     filter_init_frame_fn filter_init_frame;
     filter_process_fn filter_process;
     filter_free_fn filter_free;
     
 } context;
-
 
 void *worker_thread(void *);
 void worker_cleanup(void *);
@@ -90,11 +94,8 @@ static void null_filter(void* filter_ctx, Mat &src, Mat &dst) {
     void *depth_stored;
 
     
-    context_settings *init_settings;
     
-    void* filter_handle;
-    void* filter_ctx;
-
+    
 
     //void kinect_video_rgb();
     //void kinect_video_ir();
