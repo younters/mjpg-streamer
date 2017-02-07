@@ -309,7 +309,7 @@ int input_init(input_parameter *param, int plugin_no)
         freenect_shutdown(pctx->f_ctx);
         return 1;
     }
-    if (freenect_open_device(pctx->f_ctx, &pxtc->f_dev, 0) < 0) {
+    if (freenect_open_device(pctx->f_ctx, &pctx->f_dev, 0) < 0) {
         IPRINT("Could not open Kinect Device\n");
         freenect_shutdown(pctx->f_ctx);
         return 1;
