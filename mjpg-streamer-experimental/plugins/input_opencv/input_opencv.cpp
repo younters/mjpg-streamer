@@ -421,6 +421,8 @@ int input_init(input_parameter *param, int plugin_no)
     freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_MM));
     freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
 
+    freenect_start_depth(f_dev);
+    freenect_start_video(f_dev);
 
 
 
@@ -569,6 +571,8 @@ void *worker_thread(void *arg)
     if (pctx->filter_init_frame != NULL)
         src = pctx->filter_init_frame(pctx->filter_ctx);
     
+    src = videomat;
+
     while (!pglobal->stop) {
         if (!pctx->capture.read(src))
             break; // TODO
