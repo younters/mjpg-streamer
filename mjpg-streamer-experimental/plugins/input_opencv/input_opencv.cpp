@@ -300,7 +300,7 @@ int input_init(input_parameter *param, int plugin_no)
 
 
     if (freenect_init(&pctx->f_ctx, NULL) < 0) {
-        printf("Freenect Framework Initialization Failed!\n");
+        IPRINT("Freenect Framework Initialization Failed!\n");
         return 1;
     }
     freenect_select_subdevices(pctx->f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
