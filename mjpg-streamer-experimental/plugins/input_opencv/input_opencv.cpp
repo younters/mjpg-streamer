@@ -581,6 +581,7 @@ void *worker_thread(void *arg)
             src = videomat;
         // call the filter function
         pctx->filter_process(pctx->filter_ctx, src, dst);
+        dst = videomat;
             
         /* copy JPG picture to global buffer */
         pthread_mutex_lock(&in->db);
