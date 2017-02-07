@@ -13,6 +13,11 @@ int input_stop(int id);
 int input_run(int id);
 int input_cmd(int plugin, unsigned int control_id, unsigned int typecode, int value);
 
+void process_kinect(void *video, void *depth);
+void depth_callback(freenect_device *dev, void *depth, uint32_t timestamp);
+void rgb_callback(freenect_device *dev, void *rgb, uint32_t timestamp);
+
+
 #ifdef __cplusplus
 }
 #endif
