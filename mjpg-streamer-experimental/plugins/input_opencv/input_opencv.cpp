@@ -38,11 +38,7 @@ static globals     *pglobal;
 
 typedef struct {
     
-    freenect_context *f_ctx;
-    freenect_device *f_dev;
-    int bytecount;
-
-    void *depth_stored;
+    
     
     char *filter_args;
     int fps_set, fps,
@@ -64,6 +60,13 @@ typedef void (*filter_free_fn)(void* filter_ctx);
 typedef struct {
     pthread_t   worker;
     VideoCapture capture;
+
+    freenect_context *f_ctx;
+    freenect_device *f_dev;
+    int bytecount;
+
+    void *depth_stored;
+
     
     context_settings *init_settings;
     
@@ -261,6 +264,8 @@ int input_init(input_parameter *param, int plugin_no)
     IPRINT("device........... : %s\n", device);
     IPRINT("Desired Resolution: %i x %i\n", width, height);
     
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // need to allocate a VideoCapture object: default device is 0
     try {
         if (!strcasecmp(device, "default")) {
@@ -286,7 +291,27 @@ int input_init(input_parameter *param, int plugin_no)
     
     if (settings->fps_set)
         pctx->capture.set(CAP_PROP_FPS, settings->fps);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+
+
+
+
+
+
+    if (freenect_init(&pctx->f_ctx, NULL) < 0) {
+        printf("Freenect Framework Initialization Failed!\n");
+        return 1;
+    }
+    freenect_select_subdevices(pctx->f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
+    int nr_devices = freenect_num_devices (pctx->f_ctx);
+
+
+
+
+
+
+
     /* filter stuff goes here */
     if (filter != NULL) {
         
