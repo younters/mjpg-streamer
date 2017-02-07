@@ -23,6 +23,11 @@
 #include <getopt.h>
 #include <dlfcn.h>
 #include <pthread.h>
+#include <libfreenect.h>
+
+#ifndef KINECT_H_DEF
+#define KINECT_H_DEF
+
 
 #include "input_opencv.h"
 
@@ -35,9 +40,10 @@ using namespace std;
 static globals     *pglobal;
 
 typedef struct {
+    
     freenect_context *f_ctx;
     freenect_device *f_dev;
-    int bytecount = 1;
+    int bytecount;
 
     void *depth_stored;
     
