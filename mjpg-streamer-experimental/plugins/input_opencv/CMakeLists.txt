@@ -6,6 +6,11 @@ find_package(OpenCV COMPONENTS core imgproc highgui videoio)
 MJPG_STREAMER_PLUGIN_OPTION(input_opencv "OpenCV input plugin"
                             ONLYIF OpenCV_FOUND)
 
+#
+# To Install OpenCV on RPI
+# https://github.com/jabelone/OpenCV-for-Pi
+#
+
 
 FIND_PATH(FREENECT_INCLUDE_DIR libfreenect.h
   /usr/include/libfreenect

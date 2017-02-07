@@ -35,6 +35,12 @@ using namespace std;
 static globals     *pglobal;
 
 typedef struct {
+    freenect_context *f_ctx;
+    freenect_device *f_dev;
+    int bytecount = 1;
+
+    void *depth_stored;
+    
     char *filter_args;
     int fps_set, fps,
         quality_set, quality,
