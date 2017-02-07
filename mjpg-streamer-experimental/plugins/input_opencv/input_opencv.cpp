@@ -304,7 +304,11 @@ int input_init(input_parameter *param, int plugin_no)
         return 1;
     }
     freenect_select_subdevices(pctx->f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
-    //int nr_devices = freenect_num_devices (pctx->f_ctx);
+    if (freenect_num_devices(pctx->f_ctx) < 1) {
+        IPRINT("No Kinect Sensors were detected! %i\n", freenect_num_devices(pctx->f_ctx));
+        freenect_shutdown(f_ctx);
+        return 1;
+    }
 
 
 
