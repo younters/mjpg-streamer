@@ -570,13 +570,15 @@ void *worker_thread(void *arg)
     // the mat, so that it doesn't need to copy the data each time
     if (pctx->filter_init_frame != NULL)
         src = pctx->filter_init_frame(pctx->filter_ctx);
-    
+    //////////////////////////////////////////////////
     src = videomat;
 
     while (!pglobal->stop) {
         if (!pctx->capture.read(src))
             break; // TODO
             
+
+            src = videomat;
         // call the filter function
         pctx->filter_process(pctx->filter_ctx, src, dst);
             
