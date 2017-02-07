@@ -45,7 +45,7 @@ ELSE(FREENECT_FOUND)
 ENDIF(FREENECT_FOUND)
 
 
-find_package(libfreenect REQUIRED)
+#find_package(libfreenect REQUIRED)
 
 if (PLUGIN_INPUT_OPENCV)
     include_directories(${OpenCV_INCLUDE_DIRS})
