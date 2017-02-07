@@ -25,9 +25,6 @@
 #include <pthread.h>
 #include <libfreenect.h>
 
-#ifndef KINECT_H_DEF
-#define KINECT_H_DEF
-
 
 #include "input_opencv.h"
 
