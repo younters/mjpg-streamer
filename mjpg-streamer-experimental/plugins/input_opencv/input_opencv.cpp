@@ -571,7 +571,7 @@ void *worker_thread(void *arg)
     if (pctx->filter_init_frame != NULL)
         src = pctx->filter_init_frame(pctx->filter_ctx);
     //////////////////////////////////////////////////
-    src = videomat;
+    //src = videomat;
 
     while (!pglobal->stop) {
         if (!pctx->capture.read(src))
