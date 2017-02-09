@@ -535,7 +535,7 @@ int input_run(int id)
         exit(EXIT_FAILURE);
     }
     pthread_detach(pctx->worker);
-
+start_kinect();
     return 0;
 }
 
@@ -593,12 +593,12 @@ void *worker_thread(void *arg)
             break; // TODO
         }
         IPRINT("start while");
-          if(freenect_process_events(f_ctx) >= 0) {
+         /* if(freenect_process_events(f_ctx) >= 0) {
             IPRINT("proc events");
           } else {
             IPRINT("proc events 2");
 
-          }
+          }*/
         //Mat video = video_wait();
         //src = video;
         //src = video_wait();
