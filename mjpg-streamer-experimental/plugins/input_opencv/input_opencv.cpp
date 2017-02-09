@@ -574,7 +574,7 @@ void *worker_thread(void *arg)
 
     while (!pglobal->stop) {
         if (!pctx->capture.read(src)) {
-            IRRINT("capture false");
+            IPRINT("capture false");
             break; // TODO
         }
         IPRINT("start while");
