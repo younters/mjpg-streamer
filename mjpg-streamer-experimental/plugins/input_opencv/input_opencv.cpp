@@ -156,6 +156,51 @@ void kinect_video_ir() {
 
 
 
+void init_cv() {
+    temp_1c = Mat(480, 640, CV_8UC1);
+    temp_3c = Mat(480, 640, CV_8UC3);
+    videomat = Mat(480, 640, CV_8UC3);
+    
+    //hsl_low = Scalar(0, 16, 0);
+    //hsl_high = Scalar(255, 255, 255);
+    
+    //blur_size = Size(1, 1);
+    
+    pthread_cond_init(&video_cv, NULL);
+    pthread_mutex_init(&video_mtx, NULL);
+}
+
+int init_kinect() {
+
+    if (freenect_init(&f_ctx, NULL) < 0) {
+        printf("Freenect Framework Initialization Failed!\n");
+        return 1;
+    }
+    freenect_select_subdevices(f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
+    if (freenect_num_devices(f_ctx) < 1) {
+        printf("No Kinect Sensors were detected! %i\n", freenect_num_devices(f_ctx));
+        freenect_shutdown(f_ctx);
+        return 1;
+    }
+    if (freenect_open_device(f_ctx, &f_dev, 0) < 0) {
+        printf("Could not open Kinect Device\n");
+        freenect_shutdown(f_ctx);
+        return 1;
+    }
+    freenect_set_tilt_degs(f_dev, 0);
+    
+    freenect_set_depth_callback(f_dev, depth_callback);
+    freenect_set_video_callback(f_dev, rgb_callback);
+    
+    freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_MM));
+    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
+
+    freenect_start_depth(f_dev);
+    freenect_start_video(f_dev);
+
+    return 0;
+}
+
 
 
 
@@ -370,38 +415,9 @@ int input_init(input_parameter *param, int plugin_no)
 
 
 
-    temp_1c = Mat(480, 640, CV_8UC1);
-    temp_3c = Mat(480, 640, CV_8UC3);
-    videomat = Mat(480, 640, CV_8UC3);
+    init_cv();
 
-    pthread_cond_init(&video_cv, NULL);
-    pthread_mutex_init(&video_mtx, NULL);
-
-    if (freenect_init(&f_ctx, NULL) < 0) {
-        IPRINT("Freenect Framework Initialization Failed!\n");
-        return 1;
-    }
-    freenect_select_subdevices(f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
-    if (freenect_num_devices(f_ctx) < 1) {
-        IPRINT("No Kinect Sensors were detected! %i\n", freenect_num_devices(f_ctx));
-        freenect_shutdown(f_ctx);
-        return 1;
-    }
-    if (freenect_open_device(f_ctx, &f_dev, 0) < 0) {
-        IPRINT("Could not open Kinect Device\n");
-        freenect_shutdown(f_ctx);
-        return 1;
-    }
-    freenect_set_tilt_degs(f_dev, 0);
-    
-    freenect_set_depth_callback(f_dev, depth_callback);
-    freenect_set_video_callback(f_dev, rgb_callback);
-    
-    freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_MM));
-    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
-
-    freenect_start_depth(f_dev);
-    freenect_start_video(f_dev);
+    init_kinect();
 
 
 
