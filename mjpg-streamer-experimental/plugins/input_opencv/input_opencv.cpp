@@ -478,7 +478,7 @@ int input_init(input_parameter *param, int plugin_no)
     }
 
 
-    
+
     init_cv();
     if(init_kinect()  == 1) {
         printf("ERROR with INIT KINECT");
@@ -593,7 +593,7 @@ void *worker_thread(void *arg)
             break; // TODO
         }
         IPRINT("start while");
-            freenect_process_events(f_ctx)
+            freenect_process_events(f_ctx);
         //Mat video = video_wait();
         //src = video;
         //src = video_wait();
