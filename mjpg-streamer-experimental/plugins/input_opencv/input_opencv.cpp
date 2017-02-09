@@ -201,7 +201,9 @@ int init_kinect() {
     return 0;
 }
 
-
+void start_kinect() {
+    while(freenect_process_events(f_ctx) >= 0);
+}
 
 
 
@@ -270,8 +272,7 @@ int input_init(input_parameter *param, int plugin_no)
     const char *filter = NULL, *filter_args = "";
     int width = 640, height = 480, i, device_idx;
     
-    init_cv();
-    init_kinect();
+
 
 
     input * in;
@@ -475,13 +476,27 @@ int input_init(input_parameter *param, int plugin_no)
         pctx->filter_process = null_filter;
         pctx->filter_free = NULL;
     }
+
+
     
+    init_cv();
+    if(init_kinect()  == 1) {
+        printf("ERROR with INIT KINECT");
+        return 1;
+    } 
+    kinect_video_ir();
+
+
     return 0;
     
 fatal_error:
     worker_cleanup(in);
     closelog();
     exit(EXIT_FAILURE);
+
+
+
+    
 }
 
 /******************************************************************************
@@ -578,7 +593,7 @@ void *worker_thread(void *arg)
             break; // TODO
         }
         IPRINT("start while");
-            
+            freenect_process_events(f_ctx)
         //Mat video = video_wait();
         //src = video;
         //src = video_wait();
