@@ -587,6 +587,8 @@ void *worker_thread(void *arg)
         //pctx->filter_process(pctx->filter_ctx, src, dst);
         
             dst = video_wait();
+IPRINT("through vid_wait");
+
         /* copy JPG picture to global buffer */
         pthread_mutex_lock(&in->db);
         
