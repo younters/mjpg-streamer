@@ -545,7 +545,7 @@ int input_run(int id)
         exit(EXIT_FAILURE);
     }
     pthread_detach(pctx->worker);
-    start_kinect();
+    //start_kinect();
     return 0;
 }
 
