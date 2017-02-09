@@ -104,7 +104,7 @@ void depth_callback(freenect_device *dev, void *depth, uint32_t timestamp) {
 
 
 void rgb_callback(freenect_device *dev, void *video, uint32_t timestamp) {
-    process_kinect(video, depth_stored);
+    process_kinect(video/*, depth_stored*/);
 }
 
 void prepare_video(void *video, Mat video_mat) {
@@ -124,7 +124,7 @@ Mat video_wait() {
 }
 
 
-void process_kinect(void *video, void *depth) {
+void process_kinect(void *video/*, void *depth*/) {
     //int count = kinect_video_bytecount();
     //char buf[4];
     
@@ -189,13 +189,13 @@ int init_kinect() {
     }
     freenect_set_tilt_degs(f_dev, 0);
     
-    freenect_set_depth_callback(f_dev, depth_callback);
+    //freenect_set_depth_callback(f_dev, depth_callback);
     freenect_set_video_callback(f_dev, rgb_callback);
     
-    freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_MM));
+    //freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_MM));
     freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
 
-    freenect_start_depth(f_dev);
+    //freenect_start_depth(f_dev);
     freenect_start_video(f_dev);
 
     return 0;
@@ -535,7 +535,7 @@ int input_run(int id)
         exit(EXIT_FAILURE);
     }
     pthread_detach(pctx->worker);
-start_kinect();
+    start_kinect();
     return 0;
 }
 
@@ -588,11 +588,11 @@ void *worker_thread(void *arg)
     //src = videomat;
 
     while (!pglobal->stop) {
-        if (!pctx->capture.read(src)) {
-            IPRINT("capture false");
-            break; // TODO
-        }
-        IPRINT("start while");
+        //if (!pctx->capture.read(src)) {
+            //IPRINT("capture false");
+            //break; // TODO
+        //}
+        IPRINT("start while\n");
          /* if(freenect_process_events(f_ctx) >= 0) {
             IPRINT("proc events");
           } else {
