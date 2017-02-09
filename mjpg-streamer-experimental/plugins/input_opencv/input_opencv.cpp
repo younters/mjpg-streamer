@@ -593,7 +593,12 @@ void *worker_thread(void *arg)
             break; // TODO
         }
         IPRINT("start while");
-          IPRINT(freenect_process_events(f_ctx));
+          if(freenect_process_events(f_ctx) >= 0) {
+            IPRINT("proc events");
+          } else {
+            IPRINT("proc events 2");
+
+          }
         //Mat video = video_wait();
         //src = video;
         //src = video_wait();
