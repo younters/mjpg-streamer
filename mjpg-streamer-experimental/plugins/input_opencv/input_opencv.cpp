@@ -366,7 +366,7 @@ int input_init(input_parameter *param, int plugin_no)
 
     temp_1c = Mat(480, 640, CV_8UC1);
     temp_3c = Mat(480, 640, CV_8UC3);
-    videomat = Mat(480, 640, CV_8UC3)
+    videomat = Mat(480, 640, CV_8UC3);
 
     if (freenect_init(&f_ctx, NULL) < 0) {
         IPRINT("Freenect Framework Initialization Failed!\n");
