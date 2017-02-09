@@ -270,6 +270,10 @@ int input_init(input_parameter *param, int plugin_no)
     const char *filter = NULL, *filter_args = "";
     int width = 640, height = 480, i, device_idx;
     
+    init_cv();
+    init_kinect();
+
+
     input * in;
     context *pctx;
     context_settings *settings;
@@ -415,9 +419,9 @@ int input_init(input_parameter *param, int plugin_no)
 
 
 
-    init_cv();
+    //init_cv();
 
-    init_kinect();
+    //init_kinect();
 
 
 
