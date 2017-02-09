@@ -522,6 +522,7 @@ int input_stop(int id)
     if (pctx != NULL) {
         DBG("will cancel input thread\n");
         pthread_cancel(pctx->worker);
+        //pthread_cancel(pctx->workerK);
     }
     return 0;
 }
@@ -544,7 +545,13 @@ int input_run(int id)
         fprintf(stderr, "could not start worker thread\n");
         exit(EXIT_FAILURE);
     }
+    /*if(pthread_create(&pctx->workerK, 0, worker_thread, in) != 0) {
+        worker_cleanup(in);
+        fprintf(stderr, "could not start worker thread\n");
+        exit(EXIT_FAILURE);
+    }*/
     pthread_detach(pctx->worker);
+    //pthread_detach(pctx->workerK);
     //start_kinect();
     return 0;
 }
