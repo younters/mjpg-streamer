@@ -123,7 +123,7 @@ void process_kinect(void *video, void *depth) {
     //char buf[4];
     
     prepare_video(video, videomat);
-    videomat = video.clone();
+    //videomat = video.clone();
 
     
     /*pthread_mutex_lock(&video_mtx);
