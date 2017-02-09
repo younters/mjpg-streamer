@@ -573,8 +573,11 @@ void *worker_thread(void *arg)
     //src = videomat;
 
     while (!pglobal->stop) {
-        if (!pctx->capture.read(src))
+        if (!pctx->capture.read(src)) {
+            fprintf("capture false");
             break; // TODO
+        }
+        fprintf("start while");
             
         //Mat video = video_wait();
         //src = video;
