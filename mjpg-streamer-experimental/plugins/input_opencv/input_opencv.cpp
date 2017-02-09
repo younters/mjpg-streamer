@@ -88,23 +88,9 @@ static void null_filter(void* filter_ctx, Mat &src, Mat &dst) {
 
 
 
-    freenect_context *f_ctx;
-    freenect_device *f_dev;
-
-    void *depth_stored;
-
-    
-    
-    
-
-    //void kinect_video_rgb();
-    //void kinect_video_ir();
-    //int kinect_video_bytecount();
-
-    //void depth_callback(freenect_device *dev, void *depth, uint32_t timestamp);
-    //void rgb_callback(freenect_device *dev, void *rgb, uint32_t timestamp);
-    
-
+freenect_context *f_ctx;
+freenect_device *f_dev;
+void *depth_stored;
 int bytecount = 1;
 Mat videomat, temp_1c, temp_3c;
 
@@ -114,12 +100,11 @@ void depth_callback(freenect_device *dev, void *depth, uint32_t timestamp) {
 }
 
 
-
 void rgb_callback(freenect_device *dev, void *video, uint32_t timestamp) {
     process_kinect(video, depth_stored);
 }
 
-void prepare_video(void *video, int bytecount, Mat video_mat) {
+void prepare_video(void *video, Mat video_mat) {
     if (bytecount == 1) {
         memcpy(temp_1c.data, video, 640*480*bytecount);
         cvtColor(temp_1c, video_mat, CV_GRAY2RGB);
@@ -137,46 +122,29 @@ void process_kinect(void *video, void *depth) {
     //int count = kinect_video_bytecount();
     //char buf[4];
     
-    prepare_video(video, 1, videomat);
-        
-    /*if (count == 1) {
-        // IR Stream -> Send Contour Bounds to RoboRIO
-        videomat = process_IR(videomat, depth);
-        intToBytes(0xBA, buf);
-        send_to_rio(buf, 4);
-        int i;
-        for (i = 0; i < ir_rects.size(); i++) {
-            Rect r = ir_rects[i];
-            int depth_mm = 0;
+    prepare_video(video, videomat);
+    videomat = video.clone();
 
-            intToBytes(0xBB, buf);
-            send_to_rio(buf, 4);
-            
-            intToBytes(r.x, buf);
-            send_to_rio(buf, 4);
-            
-            intToBytes(r.y, buf);
-            send_to_rio(buf, 4);
-            
-            intToBytes(r.width, buf);
-            send_to_rio(buf, 4);
-            
-            intToBytes(r.height, buf);
-            send_to_rio(buf, 4);
-        }
-        
-        intToBytes(0xBC, buf);
-        send_to_rio(buf, 4);
-    } else {
-        // RGB Stream -> Driver Station Feedback Only
-        intToBytes(0xCA, buf);
-        send_to_rio(buf, 4);
-    }*/
     
     /*pthread_mutex_lock(&video_mtx);
 
     pthread_cond_broadcast(&video_cv);      // Broadcast to Threaded Listeners (e.g. Driver Station Sender)
     pthread_mutex_unlock(&video_mtx);*/
+}
+
+void kinect_video_rgb() {
+    bytecount = 3;
+    freenect_stop_video(f_dev);
+    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB));
+    freenect_start_video(f_dev);
+}
+
+
+void kinect_video_ir() {
+    bytecount = 1;
+    freenect_stop_video(f_dev);
+    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
+    freenect_start_video(f_dev);
 }
 
 
@@ -396,7 +364,9 @@ int input_init(input_parameter *param, int plugin_no)
 
 
 
-
+    temp_1c = Mat(480, 640, CV_8UC1);
+    temp_3c = Mat(480, 640, CV_8UC3);
+    videomat = Mat(480, 640, CV_8UC3)
 
     if (freenect_init(&f_ctx, NULL) < 0) {
         IPRINT("Freenect Framework Initialization Failed!\n");
@@ -578,10 +548,11 @@ void *worker_thread(void *arg)
             break; // TODO
             
 
-            src = videomat;
+        src = videomat;
+
         // call the filter function
         pctx->filter_process(pctx->filter_ctx, src, dst);
-        dst = videomat;
+        
             
         /* copy JPG picture to global buffer */
         pthread_mutex_lock(&in->db);
