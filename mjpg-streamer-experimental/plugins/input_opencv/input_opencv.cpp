@@ -94,6 +94,9 @@ void *depth_stored;
 int bytecount = 1;
 Mat videomat, temp_1c, temp_3c;
 
+pthread_cond_t video_cv;
+pthread_mutex_t video_mtx;
+
 
 void depth_callback(freenect_device *dev, void *depth, uint32_t timestamp) {
     depth_stored = depth;
@@ -115,7 +118,10 @@ void prepare_video(void *video, Mat video_mat) {
 }
 
 
-
+Mat video_wait() { 
+    pthread_cond_wait(&video_cv, &video_mtx);
+    return videomat;
+}
 
 
 void process_kinect(void *video, void *depth) {
@@ -126,10 +132,10 @@ void process_kinect(void *video, void *depth) {
     //videomat = video.clone();
 
     
-    /*pthread_mutex_lock(&video_mtx);
+    pthread_mutex_lock(&video_mtx);
 
     pthread_cond_broadcast(&video_cv);      // Broadcast to Threaded Listeners (e.g. Driver Station Sender)
-    pthread_mutex_unlock(&video_mtx);*/
+    pthread_mutex_unlock(&video_mtx);
 }
 
 void kinect_video_rgb() {
@@ -368,6 +374,9 @@ int input_init(input_parameter *param, int plugin_no)
     temp_3c = Mat(480, 640, CV_8UC3);
     videomat = Mat(480, 640, CV_8UC3);
 
+    pthread_cond_init(&video_cv, NULL);
+    pthread_mutex_init(&video_mtx, NULL);
+
     if (freenect_init(&f_ctx, NULL) < 0) {
         IPRINT("Freenect Framework Initialization Failed!\n");
         return 1;
@@ -544,15 +553,16 @@ void *worker_thread(void *arg)
     //src = videomat;
 
     while (!pglobal->stop) {
-        if (!pctx->capture.read(src))
-            break; // TODO
+        //if (!pctx->capture.read(src))
+            //break; // TODO
             
-
-        src = videomat;
+        //Mat video = video_wait();
+        //src = video;
+        src = video_wait();
 
         // call the filter function
         pctx->filter_process(pctx->filter_ctx, src, dst);
-        dst = videomat;
+        
             
         /* copy JPG picture to global buffer */
         pthread_mutex_lock(&in->db);
