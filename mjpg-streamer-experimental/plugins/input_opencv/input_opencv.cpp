@@ -112,7 +112,7 @@ void prepare_video(void *video, Mat video_mat) {
         memcpy(temp_1c.data, video, 640*480*bytecount);
         cvtColor(temp_1c, video_mat, CV_GRAY2RGB);
     } else {
-        memcpy(video_mat.data, video, 640*480*bytecount);
+        memcpy(videomat.data, video, 640*480*bytecount);
         cvtColor(video_mat, video_mat, CV_BGR2RGB);
     }
 }
