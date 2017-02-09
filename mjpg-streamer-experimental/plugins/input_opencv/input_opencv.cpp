@@ -128,7 +128,17 @@ void process_kinect(void *video) {//, void *depth) {
     //int count = kinect_video_bytecount();
     //char buf[4];
     
-    prepare_video(video, videomat);
+   // prepare_video(video, videomat);
+if (bytecount == 1) {
+        memcpy(temp_1c.data, video, 640*480*bytecount);
+        cvtColor(temp_1c, videomat, CV_GRAY2RGB);
+    } else {
+        memcpy(video_mat.data, video, 640*480*bytecount);
+        cvtColor(videomat, videomat, CV_BGR2RGB);
+    }
+
+
+
     //videomat = video.clone();
 
     
