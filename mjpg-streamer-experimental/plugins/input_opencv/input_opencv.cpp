@@ -558,12 +558,12 @@ void *worker_thread(void *arg)
             
         //Mat video = video_wait();
         //src = video;
-        src = video_wait();
+        //src = video_wait();
 
         // call the filter function
-        pctx->filter_process(pctx->filter_ctx, src, dst);
+        //pctx->filter_process(pctx->filter_ctx, src, dst);
         
-            
+            dst = video_wait();
         /* copy JPG picture to global buffer */
         pthread_mutex_lock(&in->db);
         
