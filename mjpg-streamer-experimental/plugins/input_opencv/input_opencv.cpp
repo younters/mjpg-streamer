@@ -104,7 +104,7 @@ void depth_callback(freenect_device *dev, void *depth, uint32_t timestamp) {
 
 
 void rgb_callback(freenect_device *dev, void *video, uint32_t timestamp) {
-    process_kinect(video/*, depth_stored*/);
+    process_kinect(video);//, depth_stored);
 }
 
 void prepare_video(void *video, Mat video_mat) {
@@ -124,7 +124,7 @@ Mat video_wait() {
 }
 
 
-void process_kinect(void *video/*, void *depth*/) {
+void process_kinect(void *video) {//, void *depth) {
     //int count = kinect_video_bytecount();
     //char buf[4];
     
