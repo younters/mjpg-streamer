@@ -63,7 +63,6 @@ typedef void (*filter_free_fn)(void* filter_ctx);
 
 typedef struct {
     pthread_t   worker;
-    VideoCapture capture;
     
     context_settings *init_settings;
     
@@ -403,36 +402,6 @@ int input_init(input_parameter *param, int plugin_no)
 
     IPRINT("device........... : %s\n", device);
     IPRINT("Desired Resolution: %i x %i\n", width, height);
-    
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // need to allocate a VideoCapture object: default device is 0
-    try {
-        if (!strcasecmp(device, "default")) {
-            pctx->capture.open(0);
-        } else if (sscanf(device, "%d", &device_idx) == 1) {
-            pctx->capture.open(device_idx);
-        } else {
-            pctx->capture.open(device);
-        }
-    } catch (Exception e) {
-        IPRINT("VideoCapture::open() failed: %s\n", e.what());
-        goto fatal_error;
-    }
-    
-    // validate that isOpened is true
-    if (!pctx->capture.isOpened()) {
-        IPRINT("VideoCapture::open() failed\n");
-        goto fatal_error;
-    }
-    
-    pctx->capture.set(CAP_PROP_FRAME_WIDTH, width);
-    pctx->capture.set(CAP_PROP_FRAME_HEIGHT, height);
-    
-    if (settings->fps_set)
-        pctx->capture.set(CAP_PROP_FPS, settings->fps);
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
 
 
 
@@ -573,7 +542,7 @@ void *worker_thread(void *arg)
     pthread_cleanup_push(worker_cleanup, arg);
 
     /* set VideoCapture options */
-    #define CVOPT_OPT(prop, var, desc) \
+    /*#define CVOPT_OPT(prop, var, desc) \
         if (!pctx->capture.set(prop, settings->var)) {\
             IPRINT("%-18s: %d\n", desc, settings->var); \
         } else {\
@@ -584,6 +553,7 @@ void *worker_thread(void *arg)
         if (settings->var##_set) { \
             CVOPT_OPT(prop, var,desc) \
         }
+        */
     
     CVOPT_SET(CAP_PROP_FPS, fps, "frames per second")
     CVOPT_SET(CAP_PROP_BRIGHTNESS, co, "contrast")
@@ -612,26 +582,12 @@ void *worker_thread(void *arg)
     //src = videomat;
 
     while (!pglobal->stop) {
-        //if (!pctx->capture.read(src)) {
-            //IPRINT("capture false");
-            //break; // TODO
-        //}
-        IPRINT("start while\n");
-         /* if(freenect_process_events(f_ctx) >= 0) {
-            IPRINT("proc events");
-          } else {
-            IPRINT("proc events 2");
 
-          }*/
-        //Mat video = video_wait();
-        //src = video;
-        Mat src = video_wait();
+        src = video_wait();
 
         // call the filter function
         pctx->filter_process(pctx->filter_ctx, src, dst);
         
-            //dst = video_wait();
-IPRINT("through vid_wait");
 
         /* copy JPG picture to global buffer */
         pthread_mutex_lock(&in->db);
