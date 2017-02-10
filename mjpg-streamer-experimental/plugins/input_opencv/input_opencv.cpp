@@ -77,6 +77,8 @@ typedef struct {
 void *worker_thread(void *);
 void worker_cleanup(void *);
 
+void *workerKinect_thread(void *);
+
 #define INPUT_PLUGIN_NAME "OpenCV Input plugin"
 static char plugin_name[] = INPUT_PLUGIN_NAME;
 
@@ -86,7 +88,7 @@ static void null_filter(void* filter_ctx, Mat &src, Mat &dst) {
 
 
 
-
+pthread_t   workerKinect;
 
 freenect_context *f_ctx;
 freenect_device *f_dev;
@@ -211,7 +213,8 @@ int init_kinect() {
     return 0;
 }
 
-void start_kinect() {
+void *workerKinect_thread(void *arg)
+{
     while(freenect_process_events(f_ctx) >= 0);
 }
 
@@ -522,7 +525,7 @@ int input_stop(int id)
     if (pctx != NULL) {
         DBG("will cancel input thread\n");
         pthread_cancel(pctx->worker);
-        //pthread_cancel(pctx->workerK);
+        pthread_cancel(workerKinect);
     }
     return 0;
 }
@@ -545,13 +548,13 @@ int input_run(int id)
         fprintf(stderr, "could not start worker thread\n");
         exit(EXIT_FAILURE);
     }
-    /*if(pthread_create(&pctx->workerK, 0, worker_thread, in) != 0) {
-        worker_cleanup(in);
-        fprintf(stderr, "could not start worker thread\n");
+    if(pthread_create(&workerKinect, 0, worker_thread, in) != 0) {
+        //worker_cleanup(in);
+        fprintf(stderr, "could not start workerKinect thread\n");
         exit(EXIT_FAILURE);
-    }*/
+    }
     pthread_detach(pctx->worker);
-    //pthread_detach(pctx->workerK);
+    pthread_detach(workerKinect);
     //start_kinect();
     return 0;
 }
