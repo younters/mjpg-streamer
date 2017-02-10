@@ -234,7 +234,6 @@ static void help() {
     " Help for input plugin..: "INPUT_PLUGIN_NAME"\n" \
     " ---------------------------------------------------------------\n" \
     " The following parameters can be passed to this plugin:\n\n" \
-    " [-d | --device ].......: video device to open (your camera)\n" \
     " [-r | --resolution ]...: the resolution of the video device,\n" \
     "                          can be one of the following strings:\n" \
     "                          ");
@@ -242,16 +241,7 @@ static void help() {
     resolutions_help("                          ");
     
     fprintf(stderr,
-    " [-f | --fps ]..........: frames per second\n" \
     " [-q | --quality ] .....: set quality of JPEG encoding\n" \
-    " ---------------------------------------------------------------\n" \
-    " Optional parameters (may not be supported by all cameras):\n\n"
-    " [-br ].................: Set image brightness (integer)\n"\
-    " [-co ].................: Set image contrast (integer)\n"\
-    " [-sh ].................: Set image sharpness (integer)\n"\
-    " [-sa ].................: Set image saturation (integer)\n"\
-    " [-ex ].................: Set exposure (off, or integer)\n"\
-    " [-gain ]...............: Set gain (integer)\n"
     " ---------------------------------------------------------------\n" \
     " Optional filter plugin:\n" \
     " [ -filter ]............: filter plugin .so\n" \
@@ -316,20 +306,11 @@ int input_init(input_parameter *param, int plugin_no)
         static struct option long_options[] = {
             {"h", no_argument, 0, 0},
             {"help", no_argument, 0, 0},
-            {"d", required_argument, 0, 0},
-            {"device", required_argument, 0, 0},
             {"r", required_argument, 0, 0},
             {"resolution", required_argument, 0, 0},
-            {"f", required_argument, 0, 0},
-            {"fps", required_argument, 0, 0},
             {"q", required_argument, 0, 0},
             {"quality", required_argument, 0, 0},
-            {"co", required_argument, 0, 0},
-            {"br", required_argument, 0, 0},
-            {"sa", required_argument, 0, 0},
-            {"gain", required_argument, 0, 0},
-            {"ex", required_argument, 0, 0},
-            {"filter", required_argument, 0, 0},
+            {{"filter", required_argument, 0, 0},
             {"fargs", required_argument, 0, 0},
             {0, 0, 0, 0}
         };
@@ -470,7 +451,7 @@ int input_init(input_parameter *param, int plugin_no)
         printf("ERROR with INIT KINECT");
         return 1;
     } 
-    kinect_video_ir();
+    kinect_video_rgb();
 
 
     return 0;
@@ -541,26 +522,6 @@ void *worker_thread(void *arg)
     /* set cleanup handler to cleanup allocated resources */
     pthread_cleanup_push(worker_cleanup, arg);
 
-    /* set VideoCapture options */
-    /*#define CVOPT_OPT(prop, var, desc) \
-        if (!pctx->capture.set(prop, settings->var)) {\
-            IPRINT("%-18s: %d\n", desc, settings->var); \
-        } else {\
-            fprintf(stderr, "Failed to set " desc "\n"); \
-        }
-    
-    #define CVOPT_SET(prop, var, desc) \
-        if (settings->var##_set) { \
-            CVOPT_OPT(prop, var,desc) \
-        }
-
-    
-    CVOPT_SET(CAP_PROP_FPS, fps, "frames per second")
-    CVOPT_SET(CAP_PROP_BRIGHTNESS, co, "contrast")
-    CVOPT_SET(CAP_PROP_CONTRAST, br, "brightness")
-    CVOPT_SET(CAP_PROP_SATURATION, sa, "saturation")
-    CVOPT_SET(CAP_PROP_GAIN, gain, "gain")
-    CVOPT_SET(CAP_PROP_EXPOSURE, ex, "exposure")*/
     
     /* setup imencode options */
     vector<int> compression_params;
