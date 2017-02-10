@@ -548,7 +548,7 @@ void *worker_thread(void *arg)
         } else {\
             fprintf(stderr, "Failed to set " desc "\n"); \
         }
-    */
+    
     #define CVOPT_SET(prop, var, desc) \
         if (settings->var##_set) { \
             CVOPT_OPT(prop, var,desc) \
@@ -560,7 +560,7 @@ void *worker_thread(void *arg)
     CVOPT_SET(CAP_PROP_CONTRAST, br, "brightness")
     CVOPT_SET(CAP_PROP_SATURATION, sa, "saturation")
     CVOPT_SET(CAP_PROP_GAIN, gain, "gain")
-    CVOPT_SET(CAP_PROP_EXPOSURE, ex, "exposure")
+    CVOPT_SET(CAP_PROP_EXPOSURE, ex, "exposure")*/
     
     /* setup imencode options */
     vector<int> compression_params;
