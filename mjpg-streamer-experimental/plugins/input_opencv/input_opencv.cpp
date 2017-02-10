@@ -112,16 +112,6 @@ void rgb_callback(freenect_device *dev, void *video, uint32_t timestamp) {
     process_kinect(video);//, depth_stored);
 }
 
-void prepare_video(void *video, Mat video_mat) {
-    if (bytecount == 1) {
-        memcpy(temp_1c.data, video, 640*480*bytecount);
-        cvtColor(temp_1c, video_mat, CV_GRAY2RGB);
-    } else {
-        memcpy(video_mat.data, video, 640*480*bytecount);
-        cvtColor(video_mat, video_mat, CV_BGR2RGB);
-    }
-}
-
 
 Mat video_wait() { 
     pthread_cond_wait(&video_cv, &video_mtx);
@@ -130,21 +120,13 @@ Mat video_wait() {
 
 
 void process_kinect(void *video) {//, void *depth) {
-    //int count = kinect_video_bytecount();
-    //char buf[4];
-    
-   // prepare_video(video, videomat);
 if (bytecount == 1) {
-        memcpy(temp_1c.data, video, 640*480*bytecount);
-        cvtColor(temp_1c, videomat, CV_GRAY2RGB);
+        memcpy(temp_3c.data, video, 640*480*bytecount);
+        cvtColor(temp_3c, videomat, CV_GRAY2RGB);
     } else {
         memcpy(videomat.data, video, 640*480*bytecount);
         cvtColor(videomat, videomat, CV_BGR2RGB);
     }
-
-
-
-    //videomat = video.clone();
 
     
     pthread_mutex_lock(&video_mtx);
@@ -164,7 +146,7 @@ void kinect_video_rgb() {
 void kinect_video_ir() {
     bytecount = 1;
     freenect_stop_video(f_dev);
-    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
+    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_10BIT));
     freenect_start_video(f_dev);
 }
 
@@ -521,7 +503,7 @@ void *worker_thread(void *arg)
         src = pctx->filter_init_frame(pctx->filter_ctx);
     //////////////////////////////////////////////////
     //src = videomat;
-
+    
     while (!pglobal->stop) {
 
         src = video_wait();
@@ -545,6 +527,9 @@ void *worker_thread(void *arg)
         /* signal fresh_frame */
         pthread_cond_broadcast(&in->db_update);
         pthread_mutex_unlock(&in->db);
+
+
+
     }
     
     IPRINT("leaving input thread, calling cleanup function now\n");
