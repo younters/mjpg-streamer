@@ -343,7 +343,7 @@ int input_init(input_parameter *param, int plugin_no)
         
         /* q, quality */
         case 4:
-        OPTION_INT(5, quality)
+            OPTION_INT(5, quality)
             settings->quality = MIN(MAX(settings->quality, 0), 100);
             break;
         /* filter */
@@ -431,7 +431,7 @@ int input_init(input_parameter *param, int plugin_no)
         printf("ERROR with INIT KINECT");
         return 1;
     } 
-    kinect_video_rgb();
+    kinect_video_ir();
 
 
     return 0;
