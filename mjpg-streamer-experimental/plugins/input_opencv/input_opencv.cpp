@@ -335,24 +335,24 @@ int input_init(input_parameter *param, int plugin_no)
             help();
             return 1;
         /* r, resolution */
-        case 4:
-        case 5:
-            DBG("case 4,5\n");
+        case 2:
+        case 3:
+            DBG("case 2,3\n");
             parse_resolution_opt(optarg, &width, &height);
             break;
         
         /* q, quality */
-        case 8:
-        OPTION_INT(9, quality)
+        case 4:
+        OPTION_INT(5, quality)
             settings->quality = MIN(MAX(settings->quality, 0), 100);
             break;
         /* filter */
-        case 15:
+        case 6:
             filter = optarg;
             break;
             
         /* fargs */
-        case 16:
+        case 7:
             filter_args = optarg;
             break;
             
