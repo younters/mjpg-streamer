@@ -431,7 +431,7 @@ int input_init(input_parameter *param, int plugin_no)
         printf("ERROR with INIT KINECT");
         return 1;
     } 
-    //kinect_video_ir();
+    kinect_video_rgb();
 
 
     return 0;
@@ -489,7 +489,7 @@ int input_run(int id)
     }
     pthread_detach(pctx->worker);
     pthread_detach(workerKinect);
-    //start_kinect();
+    
     return 0;
 }
 
