@@ -17,6 +17,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 #                                                                              #
 *******************************************************************************/
+
+//mjpg_streamer -i "/home/pi/mjpg-streamer/mjpg-streamer-experimental/plugins/input_opencv/input_opencv.so"  -o "output_http.so -w /usr/local/www"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -78,6 +81,7 @@ void *worker_thread(void *);
 void worker_cleanup(void *);
 
 void *workerKinect_thread(void *);
+//void workerKinect_cleanup(void *);
 
 #define INPUT_PLUGIN_NAME "OpenCV Input plugin"
 static char plugin_name[] = INPUT_PLUGIN_NAME;
@@ -548,9 +552,9 @@ int input_run(int id)
         fprintf(stderr, "could not start worker thread\n");
         exit(EXIT_FAILURE);
     }
-    if(pthread_create(&workerKinect, 0, worker_thread, in) != 0) {
-        //worker_cleanup(in);
-        fprintf(stderr, "could not start workerKinect thread\n");
+    if(pthread_create(&workerKinect, 0, workerKinect_thread, in) != 0) {
+        //workerKinect_cleanup(in);
+        IPRINT(stderr, "could not start workerKinect thread\n");
         exit(EXIT_FAILURE);
     }
     pthread_detach(pctx->worker);
