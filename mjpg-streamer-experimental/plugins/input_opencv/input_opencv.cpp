@@ -310,7 +310,7 @@ int input_init(input_parameter *param, int plugin_no)
             {"resolution", required_argument, 0, 0},
             {"q", required_argument, 0, 0},
             {"quality", required_argument, 0, 0},
-            {{"filter", required_argument, 0, 0},
+            {"filter", required_argument, 0, 0},
             {"fargs", required_argument, 0, 0},
             {0, 0, 0, 0}
         };
