@@ -548,12 +548,12 @@ void *worker_thread(void *arg)
         } else {\
             fprintf(stderr, "Failed to set " desc "\n"); \
         }
-    
+    */
     #define CVOPT_SET(prop, var, desc) \
         if (settings->var##_set) { \
             CVOPT_OPT(prop, var,desc) \
         }
-        */
+
     
     CVOPT_SET(CAP_PROP_FPS, fps, "frames per second")
     CVOPT_SET(CAP_PROP_BRIGHTNESS, co, "contrast")
