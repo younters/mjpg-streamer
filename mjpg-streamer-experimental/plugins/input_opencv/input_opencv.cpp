@@ -121,8 +121,8 @@ Mat video_wait() {
 
 void process_kinect(void *video) {//, void *depth) {
 if (bytecount == 1) {
-        memcpy(temp_3c.data, video, 640*480*bytecount);
-        cvtColor(temp_3c, videomat, CV_GRAY2RGB);
+        memcpy(temp_1c.data, video, 640*480*bytecount);
+        cvtColor(temp_1c, videomat, CV_GRAY2RGB);
     } else {
         memcpy(videomat.data, video, 640*480*bytecount);
         cvtColor(videomat, videomat, CV_BGR2RGB);
@@ -190,7 +190,7 @@ int init_kinect() {
     freenect_set_video_callback(f_dev, rgb_callback);
     
     //freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_MM));
-    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
+    freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_10BIT));
 
     //freenect_start_depth(f_dev);
     freenect_start_video(f_dev);
