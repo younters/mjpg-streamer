@@ -554,7 +554,7 @@ int input_run(int id)
     }
     if(pthread_create(&workerKinect, 0, workerKinect_thread, in) != 0) {
         //workerKinect_cleanup(in);
-        IPRINT(stderr, "could not start workerKinect thread\n");
+        IPRINT("could not start workerKinect thread\n");
         exit(EXIT_FAILURE);
     }
     pthread_detach(pctx->worker);
