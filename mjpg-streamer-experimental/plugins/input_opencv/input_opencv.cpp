@@ -334,37 +334,18 @@ int input_init(input_parameter *param, int plugin_no)
         case 1:
             help();
             return 1;
-        /* d, device */
-        case 2:
-        case 3:
-            device = optarg;
-            break;
         /* r, resolution */
         case 4:
         case 5:
             DBG("case 4,5\n");
             parse_resolution_opt(optarg, &width, &height);
             break;
-        /* f, fps */
-        case 6:
-        OPTION_INT(7, fps)
-            break;
+        
         /* q, quality */
         case 8:
         OPTION_INT(9, quality)
             settings->quality = MIN(MAX(settings->quality, 0), 100);
             break;
-        OPTION_INT(10, co)
-            break;
-        OPTION_INT(11, br)
-            break;
-        OPTION_INT(12, sa)
-            break;
-        OPTION_INT(13, gain)
-            break;
-        OPTION_INT(14, ex)
-            break;
-            
         /* filter */
         case 15:
             filter = optarg;
@@ -381,7 +362,6 @@ int input_init(input_parameter *param, int plugin_no)
         }
     }
 
-    IPRINT("device........... : %s\n", device);
     IPRINT("Desired Resolution: %i x %i\n", width, height);
 
 
